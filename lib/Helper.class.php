@@ -6,9 +6,13 @@ class WpJshrinkHelper {
 
     public $compile_prefix = 'script-';
 
+    public $exclude = array(
+        'admin-bar'
+    );
+
     public function __construct()
     {
-        do_action('wp_jshrink_script_costruct', $this);
+        do_action('wp_jshrink_script_construct', $this);
     }
 
     public function get_realpath($uri)
@@ -19,9 +23,13 @@ class WpJshrinkHelper {
         return str_replace(site_url(), ABSPATH, $uri);
     }
 
-    public function is_in_current_theme($uri)
+    public function is_minifiable($item)
     {
-        return (bool) strstr($uri, 'wp-content/themes/' . get_template());
+        if(in_array($item['handle'], $this->exclude)) {
+            return false;
+        }
+        return (bool) ( strstr($item['path'], 'wp-content/themes/' . get_template())
+            || strstr($item['path'], 'wp-includes/js/') );
     }
 
     public function print_script($code)
@@ -71,16 +79,20 @@ class WpJshrinkHelper {
 
     public function clean_cache()
     {
-        $files = scandir(ABSPATH . $this->compile_path);
-        if($files) {
-            $check_time = time() - 1;
-            foreach($files as $file) {
-                $full_path = ABSPATH . $this->compile_path . '/' .$file;
-                if( filemtime($full_path) > $check_time ){
-                    continue;
-                }
-                if(is_file($full_path)) {
-                    unlink($full_path);
+        $path = ABSPATH . $this->compile_path;
+
+        if(is_dir($path)) {
+            $files = scandir($path);
+            if ($files) {
+                $check_time = time() - 604800;
+                foreach ($files as $file) {
+                    $full_path = ABSPATH . $this->compile_path . '/' . $file;
+                    if (filemtime($full_path) > $check_time) {
+                        continue;
+                    }
+                    if (is_file($full_path)) {
+                        unlink($full_path);
+                    }
                 }
             }
         }

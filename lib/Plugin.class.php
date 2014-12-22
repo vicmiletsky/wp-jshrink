@@ -14,7 +14,7 @@ class WpJshrinkPlugin {
     {
         $this->helper = new WpJshrinkHelper();
         $this->wp_scripts = $wp_scripts;
-        do_action('wp_jshrink_plugin_costruct', $this);
+        do_action('wp_jshrink_plugin_construct', $this);
     }
 
     public function dispatch()
@@ -24,10 +24,16 @@ class WpJshrinkPlugin {
 
     public function get_list()
     {
-        //$in_footer = $this->wp_scripts->do_items($this->wp_scripts->in_footer);
-        return array_map(array($this, 'prepare_item'), $this->wp_scripts->in_footer);
+        $list = array_map(array($this, 'prepare_item'), $this->wp_scripts->in_footer);
+
+        return array_filter($list, array($this, 'check_item'));
     }
 
+
+    public function check_item($item)
+    {
+        return $this->helper->is_minifiable($item);
+    }
 
     public function prepare_item($handle)
     {
@@ -51,15 +57,17 @@ class WpJshrinkPlugin {
 
             foreach ($script_list as $item) {
 
-                // Print script localization
-                $this->wp_scripts->print_extra_script($item['handle']);
+                // Add script localization
+                $extra = $this->wp_scripts->print_extra_script($item['handle'], false);
+                if($extra) {
+                    $output .= "// Localization for: {$item['uri']}\n";
+                    $output .= $extra . "\n";
+                }
 
                 // Minify script
-                //if($this->helper->is_in_current_theme($item['path'])) {
-                    $code = file_get_contents($item['path']);
-                    $output .= "// {$item['uri']}\n";
-                    $output .= JShrink\Minifier::minify($code, $this->options) . "\n";
-                //}
+                $code = file_get_contents($item['path']);
+                $output .= "// Script: {$item['uri']}\n";
+                $output .= JShrink\Minifier::minify($code, $this->options) . "\n";
 
                 // And remove it from queue
                 wp_dequeue_script($item['handle']);
@@ -67,13 +75,10 @@ class WpJshrinkPlugin {
 
             $this->helper->clean_cache();
             $this->helper->create_compiled_file($output, $hash);
+
         } else {
             foreach ($script_list as $item) {
-
-                // Print script localization
-                $this->wp_scripts->print_extra_script($item['handle']);
-
-                // And remove it from queue// And remove it from queue// And remove it from queue
+                // Remove it from queue
                 wp_dequeue_script($item['handle']);
             }
         }
