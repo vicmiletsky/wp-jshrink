@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: WP JSHRINK
-Description: JShrink minifier implemented for WordPress. Combines all scripts equeued by <code>wp_enqueue_script</code> into a single minified js file.
+Description: JShrink minifier implemented for WordPress. Combines footer scripts equeued by <code>wp_enqueue_script</code> into a single minified js file.
 Author: Victor M
 Version: 0.2.0
 Author URI:
