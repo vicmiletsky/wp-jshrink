@@ -3,7 +3,7 @@
 Plugin Name: WP JSHRINK
 Description: JShrink minifier implemented for WordPress. Combines all scripts equeued by <code>wp_enqueue_script</code> into a single minified js file.
 Author: Victor M
-Version: 0.1.0
+Version: 0.2.0
 Author URI:
 Plugin URI:
 
@@ -13,7 +13,7 @@ Plugin URI:
 
 function wp_jshrink_init()
 {
-    if(!is_admin()) {
+    if(!is_admin() && !defined('DOING_AJAX')) {
         
         require_once 'vendor/autoload.php';
         require_once 'lib/Plugin.class.php';
