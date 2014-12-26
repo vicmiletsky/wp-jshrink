@@ -13,7 +13,7 @@ Plugin URI:
 
 function wp_jshrink_init()
 {
-    if(!is_admin() && !defined('DOING_AJAX')) {
+    if(!is_admin() && !defined('DOING_AJAX') && !defined('WP_JSHRINK_DEBUG')) {
         
         require_once 'vendor/autoload.php';
         require_once 'lib/Plugin.class.php';
