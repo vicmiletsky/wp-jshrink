@@ -2,9 +2,9 @@
 /*
 Plugin Name: WP JSHRINK
 Description: JShrink minifier implemented for WordPress. Combines footer scripts equeued by <code>wp_enqueue_script</code> into a single minified js file.
-Author: Victor M
+Author: Vic M
 Version: 0.2.0
-Author URI:
+Author URI: http://victor.miletskiy.name
 Plugin URI:
 
   This plugin is released under version 3 of the GPL:
