@@ -116,8 +116,8 @@ class WpJshrinkPlugin {
             $this->helper->create_compiled_file($output, $hash);
 
         } else {
+            // Compiled file exists, remove scripts from queue
             foreach ($script_list as $item) {
-                // Remove it from queue
                 wp_dequeue_script($item['handle']);
             }
         }
