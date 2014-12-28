@@ -55,8 +55,9 @@ class WpJshrinkHelper {
         if(in_array($item['handle'], $this->exclude)) {
             return false;
         }
-        return (bool) ( strstr($item['path'], 'wp-content/themes/' . get_template())
-            || strstr($item['path'], 'wp-includes/js/') );
+        return (bool) ( strpos($item['path'], 'wp-content/themes/' . get_template()) !== false
+            || strpos($item['path'], 'wp-includes/js/') !== false
+            || strpos($item['path'], 'wp-content/plugins/') !== false );
     }
 
 
