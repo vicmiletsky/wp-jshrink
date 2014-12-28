@@ -31,7 +31,7 @@ No. Only minifies and combines into a single file.
 This is yet another tool which you may either use or not use, it's up to you :)
 
 == Screenshots ==
-1. Number of requests significantly reduced
+1. Before & after, number of requests significantly reduced
 
 == Changelog ==
 = Version 1.0 =
