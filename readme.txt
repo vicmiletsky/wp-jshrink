@@ -38,7 +38,7 @@ No. Only minifies and combines into a single file.
 This is yet another tool which you may either use or not use, it's up to you :)
 
 == Screenshots ==
-1. Before & after, number of requests significantly reduced
+1. Before & after, number of requests significantly reduced. Everything is bundled into one file except modernizr because it's in head, jquery because it's loaded from CDN, and google analytics.
 
 == Changelog ==
 = Version 1.0 =
