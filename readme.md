@@ -7,6 +7,9 @@ JShrink minifier implemented for WordPress. Combines footer scripts equeued by w
 
 JShrink is a php class that minifies javascript so that it can be delivered to the client quicker. Check https://github.com/tedious/JShrink for more info.  
 
+### Usage
+Just install and activate the plugin, and it will seamlessly minify and combine javascript in the footer. No other actions required from your side.
+
 ### Requirements
 Works for sure on:  
 Wordpress 4.0+  

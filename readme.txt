@@ -19,7 +19,7 @@ Wordpress 4.0+
 PHP 5.4+
 
 == Installation ==
-Install and activate the plugin, it will seamlessly minify and combine javascript in the footer
+Just install and activate the plugin, and it will seamlessly minify and combine javascript in the footer. No other actions required from your side.
 
 == Frequently Asked Questions ==
 = Why would I use it? =
