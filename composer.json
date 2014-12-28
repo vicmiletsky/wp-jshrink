@@ -1,13 +1,5 @@
 {
-    "name": "miletsky/wp-jshrink",
     "require": {
         "tedivm/jshrink": "~1.0"
-    },
-    "license": "GPL-2.0",
-    "authors": [
-        {
-            "name": "victor",
-            "email": "victor.miletskiy@gmail.com"
-        }
-    ]
+    }
 }
