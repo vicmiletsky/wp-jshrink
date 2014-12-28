@@ -96,20 +96,23 @@ class WpJshrinkPlugin {
 
             foreach ($script_list as $item) {
 
-                // Add script localization
-                $extra = $this->wp_scripts->print_extra_script($item['handle'], false);
-                if($extra) {
-                    $output .= "// Localization for: {$item['uri']}\n";
-                    $output .= $extra . "\n";
+                if(is_file($item['path'])) {
+
+                    // Add script localization
+                    $extra = $this->wp_scripts->print_extra_script($item['handle'], false);
+                    if ($extra) {
+                        $output .= "// Localization for: {$item['uri']}\n";
+                        $output .= $extra . "\n";
+                    }
+
+                    // Minify script
+                    $code = file_get_contents($item['path']);
+                    $output .= "// Script: {$item['uri']}\n";
+                    $output .= JShrink\Minifier::minify($code, $this->options) . "\n";
+
+                    // And remove it from queue
+                    wp_dequeue_script($item['handle']);
                 }
-
-                // Minify script
-                $code = file_get_contents($item['path']);
-                $output .= "// Script: {$item['uri']}\n";
-                $output .= JShrink\Minifier::minify($code, $this->options) . "\n";
-
-                // And remove it from queue
-                wp_dequeue_script($item['handle']);
             }
 
             $this->helper->clean_cache();
