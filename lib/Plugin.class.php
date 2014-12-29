@@ -49,7 +49,6 @@ class WpJshrinkPlugin {
     public function get_list()
     {
         $list = array_map(array($this, 'prepare_item'), $this->wp_scripts->in_footer);
-
         return array_filter($list, array($this, 'check_item'));
     }
 
@@ -88,11 +87,12 @@ class WpJshrinkPlugin {
      */
     public function on_wp_footer()
     {
-        $output = '';
         $script_list = $this->get_list();
         $hash = $this->helper->create_hash($script_list);
 
         if(!$this->helper->compiled_file_exists($hash)) {
+
+            $output = '';
 
             foreach ($script_list as $item) {
 
@@ -119,6 +119,7 @@ class WpJshrinkPlugin {
             $this->helper->create_compiled_file($output, $hash);
 
         } else {
+
             // Compiled file exists, remove scripts from queue
             foreach ($script_list as $item) {
                 wp_dequeue_script($item['handle']);

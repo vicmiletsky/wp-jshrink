@@ -3,10 +3,16 @@
 class WpJshrinkHelper {
 
     /**
-     * Where the stuff goes
+     * Inside of WP uploads folder
      * @var string
      */
-    public $compile_path = 'wp-content/uploads/wp-jshrink';
+    public $compile_dir = 'wp-jshrink';
+
+    /**
+     * WP uploads folder info
+     * @var array
+     */
+    public $wp_uploads;
 
     /**
      * Cache file prefix
@@ -23,10 +29,19 @@ class WpJshrinkHelper {
     );
 
     /**
+     * WP plugin folder (wp-content/plugins by default)
+     * @var string
+     */
+    public $wp_plugins_path;
+
+
+    /**
      * Nothing special...
      */
     public function __construct()
     {
+        $this->wp_uploads = wp_upload_dir();
+        $this->wp_plugins_path = realpath(__DIR__ . '/../..');
         do_action('wp_jshrink_script_construct', $this);
     }
 
@@ -39,9 +54,9 @@ class WpJshrinkHelper {
     public function get_realpath($uri)
     {
         if($uri[0] === '/') {
-            return ABSPATH . $uri;
+            return ABSPATH . ltrim($uri, '/');
         }
-        return str_replace(site_url(), ABSPATH, $uri);
+        return str_replace(site_url() . '/', ABSPATH, $uri);
     }
 
 
@@ -55,9 +70,10 @@ class WpJshrinkHelper {
         if(in_array($item['handle'], $this->exclude)) {
             return false;
         }
-        return (bool) ( strpos($item['path'], 'wp-content/themes/' . get_template()) !== false
-            || strpos($item['path'], 'wp-includes/js/') !== false
-            || strpos($item['path'], 'wp-content/plugins/') !== false );
+        // Minify files from active theme, wp-includes and plugins only
+        return (bool) ( strpos($item['path'], get_stylesheet_directory()) === 0
+            || strpos($item['path'], ABSPATH . WPINC) === 0
+            || strpos($item['path'], $this->wp_plugins_path) === 0 );
     }
 
 
@@ -76,15 +92,34 @@ class WpJshrinkHelper {
 
 
     /**
-     * Actually hash items
+     * Create hash based on handles and filemtime
      * @param $list
      * @return string
      */
     public function create_hash($list)
     {
         $hash_items = array_map(array($this, 'prepare_hash_item'), $list);
-
         return substr(md5(json_encode($hash_items)), 0, 10);
+    }
+
+
+    /**
+     * Cache dir base url
+     * @return string
+     */
+    public function get_cache_url()
+    {
+        return $this->wp_uploads['baseurl'] . '/' . $this->compile_dir;
+    }
+
+
+    /**
+     * Cache dir filesystem path
+     * @return string
+     */
+    public function get_cache_dir()
+    {
+        return $this->wp_uploads['basedir'] . '/' . $this->compile_dir;
     }
 
 
@@ -106,8 +141,8 @@ class WpJshrinkHelper {
      */
     public function create_compiled_file($code, $hash)
     {
-        if(!is_dir(ABSPATH . $this->compile_path)) {
-            mkdir(ABSPATH . $this->compile_path, 0777, true);
+        if(!is_dir($this->get_cache_dir())) {
+            mkdir($this->get_cache_dir(), 0777, true);
         }
         file_put_contents($this->get_compiled_file_path($hash), $code);
     }
@@ -120,7 +155,7 @@ class WpJshrinkHelper {
      */
     public function get_compiled_file_uri($hash)
     {
-        return site_url() . '/' . $this->compile_path . '/' . $this->compile_prefix . $hash . '.js';
+        return $this->get_cache_url() . '/' . $this->compile_prefix . $hash . '.js';
     }
 
 
@@ -131,7 +166,7 @@ class WpJshrinkHelper {
      */
     public function get_compiled_file_path($hash)
     {
-        return ABSPATH . $this->compile_path . '/' . $this->compile_prefix . $hash . '.js';
+        return $this->get_cache_dir() . '/' . $this->compile_prefix . $hash . '.js';
     }
 
 
@@ -140,7 +175,7 @@ class WpJshrinkHelper {
      */
     public function clean_cache()
     {
-        $path = ABSPATH . $this->compile_path;
+        $path = $this->get_cache_dir();
 
         if(is_dir($path)) {
             $files = scandir($path);
