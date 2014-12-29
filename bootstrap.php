@@ -5,7 +5,7 @@ Description: JShrink minifier implemented for WordPress. Combines footer scripts
 Author: Vic M
 Version: 1.1.0
 Author URI: http://victor.miletskiy.name
-Plugin URI:
+Plugin URI: https://wordpress.org/plugins/wp-jshrink/
 
   This plugin is released under version 3 of the GPL:
   http://www.opensource.org/licenses/gpl-3.0.html
