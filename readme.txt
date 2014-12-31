@@ -42,6 +42,9 @@ This is yet another tool which you may either use or not use, it's up to you :)
 
 == Changelog ==
 
+= Version 1.1.1 =
+* Unused code like tests removed from library to reduce package size
+
 = Version 1.1 =
 * Hardcoded paths removed
 
