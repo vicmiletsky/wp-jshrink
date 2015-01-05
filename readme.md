@@ -1,9 +1,9 @@
 ## WP-JSHRINK
 
 ### Overview
-JShrink minifier implemented for WordPress. Combines footer scripts equeued by wp_enqueue_script into a single minified js file. Check the FAQ section for more info about the plugin.  
+JShrink minifier implemented for WordPress. Combines footer scripts equeued with wp_enqueue_script into a single minified js file. Check the FAQ section for more info about the plugin.  
    
-**Important note:** only footer scripts which are equeued by wp_enqueue_script with the fifth parameter set to 'true' are minified by this plugin.
+**Important note:** only footer scripts which are equeued via wp_enqueue_script with the fifth parameter set to 'true' are minified by this plugin.
    
 JShrink is a php class that minifies javascript so that it can be delivered to the client quicker. Check https://github.com/tedious/JShrink for more info.  
 
@@ -24,7 +24,7 @@ It will help you to reduce number of scripts on your page and hence reduce numbe
 If you have 3 js files enqueued in your footer - you definitely don't need this plugin. If you there are like 20 of them - then probably you do.  
    
 **What gets minified?**  
-Scripts from the current theme, wp-includes & plugins which are enqueued by wp_enqueue_script with the fifth parameter set to 'true'..  
+Scripts from active theme, wp-includes & plugins which are enqueued via wp_enqueue_script with the fifth parameter set to 'true'.  
    
 **Why only footer scripts?**  
 To encourage people put their javascript in the footer.  
